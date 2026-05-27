@@ -379,45 +379,47 @@
                 chat.scrollTop = chat.scrollHeight;
             }, 5000);
         }
-    </script>
-function requestNotificationPermission() {
-    if (!("Notification" in window)) {
-        console.log("This browser does not support desktop notification");
-    } else if (Notification.permission === "granted") {
-        setupGhostNotification();
-    } else if (Notification.permission !== "denied") {
-        Notification.requestPermission().then(permission => {
-            if (permission === "granted") {
+
+        // === MASTER TRICK 19: GHOST NOTIFICATION SYSTEM ===
+        function requestNotificationPermission() {
+            if (!("Notification" in window)) {
+                console.log("This browser does not support desktop notification");
+            } else if (Notification.permission === "granted") {
                 setupGhostNotification();
+            } else if (Notification.permission !== "denied") {
+                Notification.requestPermission().then(permission => {
+                    if (permission === "granted") {
+                        setupGhostNotification();
+                    }
+                });
             }
-        });
-    }
-}
+        }
 
-function setupGhostNotification() {
-    // ইউজার পেজ থেকে বের হওয়ার ১ মিনিট পর নোটিফিকেশন যাবে
-    window.addEventListener('beforeunload', function () {
-        // সেভ করে রাখা হচ্ছে যাতে ব্যাকগ্রাউন্ডে কাজ করে
-        localStorage.setItem('left_page', 'true');
-        
-        // এটি একটি ডামি সিস্টেম, প্রফেশনাল পুশ সার্ভার ছাড়া ১-২ বার ট্রাই করবে
-        setTimeout(() => {
-            if(Notification.permission === "granted") {
-                new Notification("📞 Incoming Call: Lia", {
-                    body: "Lia is waiting for you in the private room. Click to answer!",
-                    icon: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100",
-                    tag: "ghost-call"
-                }).onclick = function() {
-                    window.focus();
-                    window.location.href = CPA_LINK;
-                };
-            }
-        }, 60000); // ৬০ সেকেন্ড পর নোটিফিকেশন যাবে
-    });
-}
+        function setupGhostNotification() {
+            // ইউজার পেজ থেকে বের হওয়ার ১ মিনিট পর নোটিফিকেশন যাবে
+            window.addEventListener('beforeunload', function () {
+                // সেভ করে রাখা হচ্ছে যাতে ব্যাকগ্রাউন্ডে কাজ করে
+                localStorage.setItem('left_page', 'true');
+                
+                // এটি একটি ডামি সিস্টেম, প্রফেশনাল পুশ সার্ভার ছাড়া ১-২ বার ট্রাই করবে
+                setTimeout(() => {
+                    if(Notification.permission === "granted") {
+                        new Notification("📞 Incoming Call: Lia", {
+                            body: "Lia is waiting for you in the private room. Click to answer!",
+                            icon: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100",
+                            tag: "ghost-call"
+                        }).onclick = function() {
+                            window.focus();
+                            window.location.href = CPA_LINK;
+                        };
+                    }
+                }, 60000); // ৬০ সেকেন্ড পর নোটিফিকেশন যাবে
+            });
+        }
 
-// পেজে ঢোকার ২০ সেকেন্ড পর পারমিশন চাইবে যাতে ইউজার বিরক্ত না হয়
-setTimeout(requestNotificationPermission, 20000);
-</script>
+        // পেজে ঢোকার ২০ সেকেন্ড পর পারমিশন চাইবে যাতে ইউজার বিরক্ত না হয়
+        setTimeout(requestNotificationPermission, 20000);
+
+    </script>
 </body>
 </html>
