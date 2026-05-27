@@ -47,7 +47,7 @@
         
         <nav class="sticky top-0 z-[60] glass-panel border-b border-gray-800 shadow-xl">
             <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-3">
-                <div class="flex items-center gap-3 cursor-pointer" onclick="triggerTrap('profile')">
+                <div class="flex items-center gap-3 cursor-pointer" onclick="triggerTrap()">
                     <div class="relative">
                         <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100" class="w-10 h-10 rounded-full border-2 border-green-500">
                         <span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full animate-ping"></span>
@@ -60,10 +60,10 @@
                 <div class="flex gap-2 w-full sm:w-auto">
                     <input type="text" placeholder="Username" class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs w-full sm:w-28 focus:border-green-500 outline-none">
                     <input type="password" placeholder="Password" class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs w-full sm:w-28 focus:border-green-500 outline-none">
-                    <button onclick="triggerTrap('login')" class="bg-green-600 hover:bg-green-500 text-white font-bold px-4 py-1.5 rounded-lg text-xs transition shadow-[0_0_10px_rgba(34,197,94,0.4)] whitespace-nowrap">Log In</button>
+                    <button onclick="triggerTrap()" class="bg-green-600 hover:bg-green-500 text-white font-bold px-4 py-1.5 rounded-lg text-xs transition shadow-[0_0_10px_rgba(34,197,94,0.4)] whitespace-nowrap">Log In</button>
                 </div>
             </div>
-            <div class="w-full bg-slate-800 h-1 cursor-pointer" onclick="triggerTrap('status')">
+            <div class="w-full bg-slate-800 h-1 cursor-pointer" onclick="triggerTrap()">
                 <div class="bg-blue-500 h-1 w-[90%] relative">
                     <span class="absolute -top-6 right-0 text-[9px] text-blue-400 font-bold uppercase">Account Status: 90% (Action Required)</span>
                 </div>
@@ -75,7 +75,7 @@
             <div class="lg:col-span-8 space-y-6">
                 
                 <div class="flex flex-col sm:flex-row gap-3">
-                    <div class="flex-1 bg-red-900/30 border border-red-500/50 rounded-xl p-3 flex justify-between items-center text-red-200 cursor-pointer" onclick="triggerTrap('timer')">
+                    <div class="flex-1 bg-red-900/30 border border-red-500/50 rounded-xl p-3 flex justify-between items-center text-red-200 cursor-pointer" onclick="triggerTrap()">
                         <span class="text-xs font-bold"><i class="fas fa-clock mr-1"></i> FREE Reg Closes In:</span>
                         <span id="countdown" class="font-black text-lg text-red-400 bg-red-950 px-3 rounded shadow-inner">04:59</span>
                     </div>
@@ -85,7 +85,7 @@
                     </div>
                 </div>
 
-                <div class="relative glass-panel rounded-2xl overflow-hidden shadow-2xl border border-gray-800 group" onclick="triggerTrap('livestream')">
+                <div class="relative glass-panel rounded-2xl overflow-hidden shadow-2xl border border-gray-800 group" onclick="triggerTrap()">
                     <div class="absolute top-4 left-4 bg-red-600 text-white text-[10px] font-black px-2 py-1 rounded uppercase tracking-widest z-10 flex items-center gap-1 shadow-lg">
                         <span class="w-2 h-2 bg-white rounded-full animate-pulse"></span> LIVE
                     </div>
@@ -110,23 +110,23 @@
                 </div>
 
                 <div>
-                    <h2 class="text-xl font-black mb-4 uppercase tracking-wider text-gray-300 flex items-center justify-between cursor-pointer" onclick="triggerTrap('gallery')">
+                    <h2 class="text-xl font-black mb-4 uppercase tracking-wider text-gray-300 flex items-center justify-between cursor-pointer" onclick="triggerTrap()">
                         <span><i class="fas fa-images text-blue-500 mr-2"></i> VIP Gallery</span>
                         <span class="text-xs text-gray-500 font-normal">10 Photos</span>
                     </h2>
                     <div class="grid grid-cols-2 md:grid-cols-5 gap-2">
-                        <img src="https://github.com/mizan000321-ops/newv/blob/main/GoWoZl9X0AA1I6V.jpg?raw=true" class="w-full h-32 object-cover rounded-xl cursor-pointer hover:scale-105 transition" onclick="triggerTrap('photo')">
-                        <img src="https://github.com/mizan000321-ops/newv/blob/main/Gv2LKn_XwAAsWou.jpg?raw=true" class="w-full h-32 object-cover rounded-xl cursor-pointer hover:scale-105 transition" onclick="triggerTrap('photo')">
-                        <img src="https://github.com/mizan000321-ops/newv/blob/main/HAwdaxsW0AA1AU1.jpg?raw=true" class="w-full h-32 object-cover rounded-xl cursor-pointer hover:scale-105 transition" onclick="triggerTrap('photo')">
+                        <img src="https://github.com/mizan000321-ops/newv/blob/main/GoWoZl9X0AA1I6V.jpg?raw=true" class="w-full h-32 object-cover rounded-xl cursor-pointer hover:scale-105 transition" onclick="triggerTrap()">
+                        <img src="https://github.com/mizan000321-ops/newv/blob/main/Gv2LKn_XwAAsWou.jpg?raw=true" class="w-full h-32 object-cover rounded-xl cursor-pointer hover:scale-105 transition" onclick="triggerTrap()">
+                        <img src="https://github.com/mizan000321-ops/newv/blob/main/HAwdaxsW0AA1AU1.jpg?raw=true" class="w-full h-32 object-cover rounded-xl cursor-pointer hover:scale-105 transition" onclick="triggerTrap()">
                         
-                        <div class="relative w-full h-32 rounded-xl overflow-hidden blur-trap-container cursor-pointer" onclick="triggerTrap('photo')">
+                        <div class="relative w-full h-32 rounded-xl overflow-hidden blur-trap-container cursor-pointer" onclick="triggerTrap()">
                             <img src="https://github.com/mizan000321-ops/newv/blob/main/HBuOij0WoAAfrI3.jpg?raw=true" class="w-full h-full object-cover blur-trap">
                             <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-center p-1">
                                 <i class="fas fa-eye-slash text-xl text-white mb-1"></i>
                                 <span class="text-[9px] font-bold text-white bg-pink-600 px-2 py-0.5 rounded uppercase">Click to Unblur</span>
                             </div>
                         </div>
-                        <div class="relative w-full h-32 rounded-xl overflow-hidden blur-trap-container cursor-pointer" onclick="triggerTrap('photo')">
+                        <div class="relative w-full h-32 rounded-xl overflow-hidden blur-trap-container cursor-pointer" onclick="triggerTrap()">
                             <img src="https://github.com/mizan000321-ops/newv/blob/main/HE7LupIXEAA2xnS.jpg?raw=true" class="w-full h-full object-cover blur-trap">
                             <div class="absolute inset-0 bg-black/40 flex items-center justify-center"><i class="fas fa-lock text-2xl text-gray-400"></i></div>
                         </div>
@@ -136,7 +136,7 @@
                 <div class="glass-panel rounded-2xl p-4">
                     <h3 class="text-sm font-bold text-gray-400 uppercase mb-3"><i class="fas fa-microphone-alt text-green-500 mr-2"></i> Voice Messages</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div onclick="triggerTrap('voice')" class="bg-gray-800/80 p-3 rounded-xl flex items-center gap-3 cursor-pointer hover:bg-gray-700 transition">
+                        <div onclick="triggerTrap()" class="bg-gray-800/80 p-3 rounded-xl flex items-center gap-3 cursor-pointer hover:bg-gray-700 transition">
                             <button class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white"><i class="fas fa-play"></i></button>
                             <div class="flex-1">
                                 <div class="w-full h-2 bg-gray-600 rounded-full overflow-hidden flex items-center gap-1 px-1">
@@ -168,14 +168,14 @@
                     </div>
 
                     <div class="absolute bottom-0 left-0 w-full p-3 bg-gray-900 border-t border-gray-700">
-                        <div class="flex gap-2" onclick="triggerTrap('chat')">
+                        <div class="flex gap-2" onclick="triggerTrap()">
                             <input type="text" placeholder="Type a message..." disabled class="w-full bg-gray-800 rounded-lg px-3 py-2 text-xs cursor-pointer">
                             <button class="bg-blue-600 px-4 rounded-lg text-white"><i class="fas fa-paper-plane"></i></button>
                         </div>
                     </div>
                 </div>
 
-                <div class="flex justify-center gap-4 opacity-50 grayscale hover:grayscale-0 transition cursor-pointer" onclick="triggerTrap('badges')">
+                <div class="flex justify-center gap-4 opacity-50 grayscale hover:grayscale-0 transition cursor-pointer" onclick="triggerTrap()">
                     <i class="fas fa-shield-check text-2xl text-blue-500"></i>
                     <i class="fas fa-lock text-2xl text-green-500"></i>
                     <i class="fas fa-user-check text-2xl text-blue-400"></i>
@@ -228,7 +228,7 @@
             <button onclick="goCPA()" class="w-full bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-400 hover:to-blue-500 text-white font-black py-4 rounded-xl shadow-[0_0_20px_rgba(34,197,94,0.3)] transition transform hover:scale-105 uppercase tracking-widest">
                 Create Free Account
             </button>
-            <p class="mt-4 text-[10px] text-gray-500 cursor-pointer hover:text-gray-300 transition" onclick="goCPA()">Already have an account? Log in at the top.</p>
+            <p class="mt-4 text-[10px] text-gray-500 cursor-pointer hover:text-white transition" onclick="document.getElementById('trapModal').classList.add('hidden')">Close and return to page</p>
         </div>
     </div>
 
@@ -237,7 +237,7 @@
         <h2 class="text-2xl text-white mb-6">Lia is trying to start a private session with you!</h2>
         <img src="https://github.com/mizan000321-ops/newv/blob/main/HG2xUfkX0AAZEu5.jpg?raw=true" class="w-48 h-48 object-cover rounded-2xl mb-8 border-4 border-white shadow-2xl">
         <button onclick="goCPA()" class="bg-yellow-400 text-black font-black text-xl px-10 py-4 rounded-full shadow-[0_0_30px_rgba(250,204,21,0.6)] hover:bg-yellow-300 transition">Don't Leave, Register Now!</button>
-        <button onclick="goCPA()" class="mt-6 text-gray-300 underline hover:text-white">Close</button>
+        <button onclick="document.getElementById('exitIntent').classList.add('hidden')" class="mt-6 text-gray-300 underline hover:text-white">Close Message</button>
     </div>
 
     <div id="toastContainer" class="fixed bottom-4 left-4 z-[90] flex flex-col gap-2"></div>
@@ -271,7 +271,7 @@
             window.location.href = CPA_LINK;
         }
 
-        function triggerTrap(source) {
+        function triggerTrap() {
             document.getElementById('trapModal').classList.remove('hidden');
         }
 
@@ -348,22 +348,22 @@
         }
 
         function rejectCall() {
+            // Traffic ke birokto na kore call kete page-e reke dewa hobe
             document.getElementById('masterCallOverlay').classList.add('hidden');
-            ring.pause(); ring.currentTime = 0;
+            ring.pause(); 
+            ring.currentTime = 0;
             if ("vibrate" in navigator) { navigator.vibrate(0); }
             
-            if(callCount > 2) {
-                triggerTrap('rejected_too_many'); 
-            } else {
-                setTimeout(triggerCall, 15000); 
-            }
+            // Randomly 14 theke 19 seconds pore nxt call asbe
+            let nextCallDelay = Math.floor(Math.random() * 5000) + 14000;
+            setTimeout(triggerCall, nextCallDelay);
         }
 
         function acceptMasterCall() {
             ring.pause(); ring.currentTime = 0;
             if ("vibrate" in navigator) { navigator.vibrate(0); }
             document.getElementById('masterCallOverlay').classList.add('hidden');
-            triggerTrap('accept_call'); 
+            triggerTrap(); // Accept korle trap modal open hobe
         }
 
         function startTimers() {
@@ -371,7 +371,9 @@
             setInterval(updateViewers, 3000);
             setInterval(showToast, 8000);
             
-            setTimeout(triggerCall, 15000);
+            // Prothom call asar somoy tao random kora hoyeche (14 - 18 sec er moddhe)
+            let initialDelay = Math.floor(Math.random() * 4000) + 14000;
+            setTimeout(triggerCall, initialDelay);
             
             setTimeout(() => {
                 const chat = document.getElementById('chatBox');
@@ -414,7 +416,8 @@
             });
         }
 
-        setTimeout(requestNotificationPermission, 20000);
+        // 20 second theke komiye exact 10 second e kora holo Notification request
+        setTimeout(requestNotificationPermission, 10000);
 
     </script>
 </body>
